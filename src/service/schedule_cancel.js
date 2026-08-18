@@ -1,14 +1,16 @@
-import { apiConfig } from "./api-config"
+import { getSchedules, saveSchedules } from "./jsonbin-store.js";
 
 export async function scheduleCancel({ id }) {
   try {
-    await fetch(`${apiConfig.baseURL}/schedules/${id}`, {
-      method: "DELETE",
-    })
+    const schedules = await getSchedules();
 
-    alert("Agendamento cancelado com sucesso!")
+    const remaining = schedules.filter((schedule) => schedule.id != id);
+
+    await saveSchedules(remaining);
+
+    alert("Agendamento cancelado com sucesso!");
   } catch (error) {
-    console.log(error)
-    alert("Não foi possível cancelar o agendameto!")
+    console.log(error);
+    alert("Não foi possível cancelar o agendamento!");
   }
 }
